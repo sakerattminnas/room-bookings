@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<head>
+    <title>Salsbokningar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <script type="text/javascript" src="external.js"></script>
+    <link rel="stylesheet" href="external.css">
+</head>
+<body onload="fetchCalendar()">
+    <p>Här ska visas vilka av linux-salarna är bokade...</p>
+    <button id="fetchButton" autofocus type="button" onclick="fetchCalendar()">Hämta kalender</button>
+    <button type="submit" onclick="fetchCalendar()">Submit</button>
+    <p id="data"></p>
+</body>
