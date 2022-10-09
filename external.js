@@ -1,5 +1,5 @@
 const relRooms = ["Asgård", "Boren", "Egypten", "Glan", "Hunn", "Olympen", "PC1", "PC2", "PC3", "PC4", "PC5", "Roxen", "SU00", "SU01", "SU02", "SU03", "SU04", "SU10", "SU11", "SU12", "SU13", "SU14", "SU15\/16", "SU17\/18", "SU24", "SU25"];
-const relRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|PC1|PC2|PC3|PC4|PC5|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/;
+const relRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|PC1|PC2|PC3|PC4|PC5|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
 
 function setUp() {
     const dateControl = document.querySelector('input[type="date"]');
@@ -141,7 +141,7 @@ function containsEqDate(JSONobject, date) {
 function eventToJSON(event, JSONevents) {
     let startPattern = /DTSTART:\d{8}T\d{6}Z/
     let endPattern = /DTEND:\d{8}T\d{6}Z/
-    let locationPattern = /LOCATION:.+/
+    let locationPattern = /LOCATION:.+/ // radbryter ibland...
     // let summaryPattern = /SUMMARY:.+/
 
     let start = event.match(startPattern)[0].substr(8);
@@ -153,28 +153,21 @@ function eventToJSON(event, JSONevents) {
     var date = new Date(start);
     date.setHours(0, 0, 0);
 
-    let location = event.match(locationPattern)[0].split(/LOCATION:Lokal: |\\, |Lokal: /).slice(1);
+    let location = event.matchAll(relRoomsRegEx);
     // let summary = event.match(summaryPattern)[0].substr(8).replace(/\\/, "");
-
-
-    for (let i = location.length - 1; i >= 0; i--) {
-        const element = location[i];
-        if (!element.match(relRoomsRegEx)) {
-            location.splice(location.indexOf(element), 1);
-        }
-    }
 
     if (!(date in JSONevents)) {
         JSONevents[date] = Object();
     }
 
-    for (let i = 0; i < location.length; i++) {
-        const room = location[i];
-        if (room in JSONevents[date]) {
-            JSONevents[date][room] = JSONevents[date][room].concat([{ "start": start, "end": end }]);
+    let room = location.next();
+    while (!room.done) {
+        if (room.value[0] in JSONevents[date]) {
+            JSONevents[date][room.value[0]] = JSONevents[date][room.value[0]].concat([{ "start": start, "end": end }]);
         } else {
-            JSONevents[date][room] = [{ "start": start, "end": end }]
+            JSONevents[date][room.value[0]] = [{ "start": start, "end": end }]
         }
+        room = location.next();
     }
 
 }
