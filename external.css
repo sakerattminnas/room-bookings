@@ -1,0 +1,40 @@
+body {
+    margin: 6%;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+button {
+    padding: 1%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#room-div {
+    /* padding: 2%; */
+    max-height: 4cm;
+    width: 4cm;
+    display: flex;
+    flex-flow: column wrap;
+    /* align-items: baseline; */
+    /* align-content: space-between; */
+}
+
+#room-div > div {
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+#main-data {
+    display: flex;
+    flex-flow: row wrap;
+    max-height: 10cm;
+}
+
+#main-data > div {
+    /* background-color:gainsboro; */
+    width: 200px;
+    height: fit-content;
+}
