@@ -1,5 +1,5 @@
 body {
-    margin: 6%;
+    margin: 3%;
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -31,10 +31,12 @@ button {
     display: flex;
     flex-flow: row wrap;
     max-height: 10cm;
+    align-items: flex-start;
+    justify-content: left;
 }
 
 #main-data > div {
     /* background-color:gainsboro; */
-    width: 200px;
+    width: 170px;
     height: fit-content;
 }
