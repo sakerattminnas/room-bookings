@@ -40,26 +40,26 @@ function changeToTodaysDate() {
 
 function formatTimes(events, date) {
     const mainData = document.getElementById("main-data");
-    for (const room in events[date]) {
-        if (Object.hasOwnProperty.call(events[date], room)) {
-            const times = events[date][room];
-            let d = document.createElement("div");
-            d.class = "flexbox";
-            let h = document.createElement("h2");
-            h.innerText = room;
-            let p = document.createElement("p");
-            d.appendChild(h);
-            for (const timeSpan in times) {
-                if (Object.hasOwnProperty.call(times, timeSpan)) {
-                    const ts = times[timeSpan];
-                    let start = ts["start"].toLocaleTimeString().substring(0, 5);
-                    let end = ts["end"].toLocaleTimeString().substring(0, 5);
-                    p.innerHTML = p.innerHTML + start + " - " + end + "<br>";
-                    d.appendChild(p);
-                }
+    mainData.innerHTML = "";
+    for (let i = 0; i < relRooms.length; i++) {
+        const room = relRooms[i];
+        const times = events[date][room];
+        let d = document.createElement("div");
+        d.class = "flexbox";
+        let h = document.createElement("h2");
+        h.innerText = room;
+        let p = document.createElement("p");
+        d.appendChild(h);
+        for (const timeSpan in times) {
+            if (Object.hasOwnProperty.call(times, timeSpan)) {
+                const ts = times[timeSpan];
+                let start = ts["start"].toLocaleTimeString().substring(0, 5);
+                let end = ts["end"].toLocaleTimeString().substring(0, 5);
+                p.innerHTML = p.innerHTML + start + " - " + end + "<br>";
+                d.appendChild(p);
             }
-            mainData.appendChild(d);
         }
+        mainData.appendChild(d);
     }
 }
 
