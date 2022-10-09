@@ -5,9 +5,11 @@ body {
 
 button {
     padding: 1%;
-    margin-top: 1%;
-    margin-bottom: 1%;
     font-family: 'Courier New', Courier, monospace;
+}
+
+input {
+    padding: 1%;
 }
 
 #room-div {
@@ -36,7 +38,6 @@ button {
 }
 
 #main-data > div {
-    /* background-color:gainsboro; */
     width: 170px;
     height: fit-content;
 }
