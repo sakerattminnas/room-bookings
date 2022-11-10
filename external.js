@@ -74,7 +74,8 @@ function fetchCalendar() {
     let dataPromise = fetchAsyncText(URL);
     dataPromise.then(
         function (value) {
-            let events = value.split(/\nEND:VEVENT\r\nBEGIN:VEVENT|BEGIN:VEVENT/im).slice(1);
+            console.log("Fetched calendar file");
+            let events = value.split(/\nEND:VEVENT\r\nBEGIN:VEVENT|BEGIN:VEVENT/img).slice(1);
             events = makeJSON(events);
 
             console.log(events);
@@ -141,7 +142,7 @@ function containsEqDate(JSONobject, date) {
 function eventToJSON(event, JSONevents) {
     let startPattern = /DTSTART:\d{8}T\d{6}Z/
     let endPattern = /DTEND:\d{8}T\d{6}Z/
-    let locationPattern = /LOCATION:.+/ // radbryter ibland...
+    let locationPattern = /LOCATION:.+/
     // let summaryPattern = /SUMMARY:.+/
 
     let start = event.match(startPattern)[0].substr(8);
@@ -153,7 +154,7 @@ function eventToJSON(event, JSONevents) {
     var date = new Date(start);
     date.setHours(0, 0, 0);
 
-    let location = event.matchAll(relRoomsRegEx);
+    let location = event.replaceAll(/\r|\n|\s/g, "").matchAll(relRoomsRegEx);
     // let summary = event.match(summaryPattern)[0].substr(8).replace(/\\/, "");
 
     if (!(date in JSONevents)) {
