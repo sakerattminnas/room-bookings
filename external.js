@@ -1,6 +1,11 @@
 const relRooms = ["Asgård", "Boren", "Egypten", "Glan", "Hunn", "Olympen", "PC1", "PC2", "PC3", "PC4", "PC5", "Roxen", "SU00", "SU01", "SU02", "SU03", "SU04", "SU10", "SU11", "SU12", "SU13", "SU14", "SU15\/16", "SU17\/18", "SU24", "SU25"];
 const relRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|PC1|PC2|PC3|PC4|PC5|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
 
+function popupFunc(element) {
+    var popup = element.children[1];
+    popup.classList.toggle("show");
+}
+
 function setUp() {
     const dateControl = document.querySelector('input[type="date"]');
     let today = new Date();
@@ -8,6 +13,16 @@ function setUp() {
     dateControl.min = today.toISOString().substring(0, 10);
     today.setDate(today.getDate() + 28);
     dateControl.max = today.toISOString().substring(0, 10);
+    changeToTodaysDate();
+    // addRoomCheckboxes();
+}
+
+function resetAll() {
+    document.getElementById("dateinfo").innerHTML = "";
+    document.getElementById("data").innerHTML = "";
+    document.getElementById("main-data").innerHTML = "";
+    document.getElementById("room-div").innerHTML = "";
+    document.querySelector('input[type="date"]').value = "";
     // addRoomCheckboxes();
 }
 
@@ -17,7 +32,7 @@ function addRoomCheckboxes() {
         let d = document.createElement("div")
         let r = document.createElement("input");
         let l = document.createElement("label");
-        d.class = "room-checkbox";
+        d.className = "room-checkbox";
         l.for = room;
         l.innerText = room;
         r.type = "checkbox";
@@ -43,23 +58,35 @@ function formatTimes(events, date) {
     mainData.innerHTML = "";
     for (let i = 0; i < relRooms.length; i++) {
         const room = relRooms[i];
-        const times = events[date][room];
+        const eventInfo = events[date][room];
         let d = document.createElement("div");
-        d.class = "flexbox";
         let h = document.createElement("h2");
         h.innerText = room;
-        let p = document.createElement("p");
+        // mainData.appendChild(h);
         d.appendChild(h);
-        for (const timeSpan in times) {
-            if (Object.hasOwnProperty.call(times, timeSpan)) {
-                const ts = times[timeSpan];
-                let start = ts["start"].toLocaleTimeString().substring(0, 5);
-                let end = ts["end"].toLocaleTimeString().substring(0, 5);
-                p.innerHTML = p.innerHTML + start + " - " + end + "<br>";
-                d.appendChild(p);
+        let p = document.createElement("p");
+        for (const infoAndTimeSpan in eventInfo) {
+            if (Object.hasOwnProperty.call(eventInfo, infoAndTimeSpan)) {
+                let outerSpan = document.createElement("span");
+                let innerSpan = document.createElement("span");
+                outerSpan.className = "popup";
+                innerSpan.className = "popuptext";
+
+                const ei = eventInfo[infoAndTimeSpan];
+                let start = ei["start"].toLocaleTimeString().substring(0, 5);
+                let end = ei["end"].toLocaleTimeString().substring(0, 5);
+
+                // p.innerHTML = p.innerHTML + start + " - " + end + "<br>";
+                innerSpan.innerText = ei["courses"];
+                outerSpan.innerHTML = start + " - " + end + "<br>";
+                outerSpan.appendChild(innerSpan);
+                outerSpan.setAttribute("onclick", "popupFunc(this)");
+                p.appendChild(outerSpan);
             }
         }
+        d.appendChild(p);
         mainData.appendChild(d);
+        // mainData.appendChild(p);
     }
 }
 
@@ -142,8 +169,8 @@ function containsEqDate(JSONobject, date) {
 function eventToJSON(event, JSONevents) {
     let startPattern = /DTSTART:\d{8}T\d{6}Z/
     let endPattern = /DTEND:\d{8}T\d{6}Z/
-    let locationPattern = /LOCATION:.+/
-    // let summaryPattern = /SUMMARY:.+/
+    let summaryPattern = /SUMMARY:.+/
+    let courseCodePattern = /[A-Z]{4}\d\d/g
 
     let start = event.match(startPattern)[0].substr(8);
     let end = event.match(endPattern)[0].substr(6);
@@ -155,7 +182,23 @@ function eventToJSON(event, JSONevents) {
     date.setHours(0, 0, 0);
 
     let location = event.replaceAll(/\r|\n|\s/g, "").matchAll(relRoomsRegEx);
-    // let summary = event.match(summaryPattern)[0].substr(8).replace(/\\/, "");
+    let summary = event.match(summaryPattern)[0].substr(8).replace(/\\/, "");
+    let courses = event.matchAll(courseCodePattern);
+
+    let course = courses.next();
+    let coursesStr = "";
+    while (!course.done) {
+        if(coursesStr.length == 0) {
+            coursesStr = course.value[0];
+        } else {
+            coursesStr = coursesStr + ", " + course.value[0];
+        }
+        course = courses.next();
+    }
+
+    if (coursesStr.length < 1) {
+        coursesStr = "Ingen kurs listad";
+    }
 
     if (!(date in JSONevents)) {
         JSONevents[date] = Object();
@@ -164,9 +207,9 @@ function eventToJSON(event, JSONevents) {
     let room = location.next();
     while (!room.done) {
         if (room.value[0] in JSONevents[date]) {
-            JSONevents[date][room.value[0]] = JSONevents[date][room.value[0]].concat([{ "start": start, "end": end }]);
+            JSONevents[date][room.value[0]] = JSONevents[date][room.value[0]].concat([{ "start": start, "end": end, "summary": summary, "courses": coursesStr }]);
         } else {
-            JSONevents[date][room.value[0]] = [{ "start": start, "end": end }]
+            JSONevents[date][room.value[0]] = [{ "start": start, "end": end, "summary": summary, "courses": coursesStr }]
         }
         room = location.next();
     }

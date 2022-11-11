@@ -1,5 +1,6 @@
 body {
     margin: 3%;
+    padding-bottom: 800px;
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -22,7 +23,7 @@ input {
     /* align-content: space-between; */
 }
 
-#room-div > div {
+#room-div>div {
     padding-left: 10%;
     padding-right: 10%;
     padding-top: 1%;
@@ -37,7 +38,111 @@ input {
     justify-content: left;
 }
 
-#main-data > div {
+#main-data>div {
     width: 170px;
     height: fit-content;
 }
+
+/* popups:
+    https://www.w3schools.com/howto/howto_js_popup.asp
+    https://www.w3schools.com/howto/howto_css_tooltip.asp
+*/
+
+.popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    /* bottom: 125%; */
+    left: 50%;
+    margin-left: -80px;
+}
+
+/* Popup arrow */
+/* .popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+} */
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 0.1s;
+    animation: fadeIn 0.1s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* .timeline-container {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 0 0 10px 0;
+}
+
+.timeline-item {
+    background-color: rgba(174, 218, 188, 0.319);
+    padding: 2px;
+    margin: 0 2px 0 0;
+    border-radius: 2px;
+    border: 1px solid gray;
+    min-width: 30px;
+}
+
+.timeline-label {
+    background-color: white;
+    border: 0;
+    width: 60px;
+}
+
+.time {
+    font-size: xx-small;
+}
+
+.starttime {
+    text-align: left;
+}
+
+.endtime {
+    text-align: right;
+}
+
+.hide {
+    visibility: hidden;
+} */
