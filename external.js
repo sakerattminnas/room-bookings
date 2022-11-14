@@ -1,5 +1,7 @@
 const relRooms = ["Asgård", "Boren", "Egypten", "Glan", "Hunn", "Olympen", "PC1", "PC2", "PC3", "PC4", "PC5", "Roxen", "SU00", "SU01", "SU02", "SU03", "SU04", "SU10", "SU11", "SU12", "SU13", "SU14", "SU15\/16", "SU17\/18", "SU24", "SU25"];
 const relRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|PC1|PC2|PC3|PC4|PC5|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
+// const PCRoomsRegEx = /PC1|PC2|PC3|PC4|PC5/g;
+const linuxRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
 const minTime = 8;
 const maxTime = 22;
 
@@ -52,9 +54,14 @@ function addRoomTimeline(room, timesStr) {
     let label = document.createElement("div");
     container.className = "timeline-container";
     label.className = "timeline-label";
-    // label.className = "timeline-item timeline-label";
     label.innerHTML = room;
     container.appendChild(label);
+
+    let type = "PC";
+    if (room.match(linuxRoomsRegEx)) {
+        type = "linux";
+    }
+
     timesStr.forEach(t => {
 
         let startInt = parseInt(t.substr(0, 2));
@@ -75,21 +82,22 @@ function addRoomTimeline(room, timesStr) {
                 startdiv.innerHTML = startInt;
                 enddiv.className = "endtime";
                 enddiv.innerHTML = endInt;
+                let hourClass = "one-hour";
                 switch (hours) {
                     case 2:
-                        d.className = "timeline-item two-hours"
+                        hourClass = "two-hours";
                         break;
                     case 3:
-                        d.className = "timeline-item three-hours"
+                        hourClass = "three-hours";
                         break;
                     case 4:
-                        d.className = "timeline-item four-hours"
+                        hourClass = "four-hours";
                         break;
 
                     default:
-                        d.className = "timeline-item one-hour"
                         break;
                 }
+                d.className = "timeline-item " + hourClass + " " + type;
                 d.appendChild(startdiv);
                 d.appendChild(enddiv);
                 container.appendChild(d);
