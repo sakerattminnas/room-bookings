@@ -11,12 +11,14 @@
     <form>
         <button type="button" onclick="resetAll()">Rensa</button>
         <button type="button" onclick="changeToTodaysDate()">Dagens datum</button>
+        <button type="button" onclick="changeDate('-')"><<</button>
         <input type="date" id="dateinput" name="dateinput"> 
+        <button type="button" onclick="changeDate('+')">>></button><br><br>
         <button type="button" onclick="fetchCalendar()" autofocus>Hämta kalender</button>
     </form>
     <h1 id="dateinfo"></h1>
     <p id="data"></p>
     <div id="timeline"></div>
     <div id="main-data"></div>
-    
+
 </body>

@@ -19,6 +19,18 @@ function setUp() {
     // addRoomCheckboxes();
 }
 
+function changeDate(dir) {
+    const dateControl = document.querySelector('input[type="date"]');
+    let theDate = dateControl.valueAsDate;
+    if (dir == "+") {
+        theDate.setUTCDate(theDate.getUTCDate() + 1);
+    } else if (dir == "-") {
+        theDate.setUTCDate(theDate.getUTCDate() - 1)
+    }
+    dateControl.value = theDate.toISOString().substring(0, 10);
+    console.log("Setting date to " + dateControl.value);
+}
+
 function resetAll() {
     document.getElementById("dateinfo").innerHTML = "";
     document.getElementById("data").innerHTML = "";
