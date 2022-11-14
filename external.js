@@ -1,7 +1,7 @@
 const relRooms = ["Asgård", "Boren", "Egypten", "Glan", "Hunn", "Olympen", "PC1", "PC2", "PC3", "PC4", "PC5", "Roxen", "SU00", "SU01", "SU02", "SU03", "SU04", "SU10", "SU11", "SU12", "SU13", "SU14", "SU15\/16", "SU17\/18", "SU24", "SU25"];
 const relRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|PC1|PC2|PC3|PC4|PC5|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
-// const PCRoomsRegEx = /PC1|PC2|PC3|PC4|PC5/g;
-const linuxRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
+const PCRoomsRegEx = /PC1|PC2|PC3|PC4|PC5/g;
+// const linuxRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
 const minTime = 8;
 const maxTime = 20;
 
@@ -57,7 +57,6 @@ function prepareTable() {
     tableRow.appendChild(tableCol);
     for (let time = minTime; time <= maxTime; time++) {
         let tableCol = document.createElement("th");
-        // tableCol.className = "time-box";
         tableCol.innerHTML = time;
         tableCol.innerText = tableCol.innerText;
         tableRow.appendChild(tableCol);
@@ -92,101 +91,14 @@ function addRoomTimelineTable(room, timesStr) {
         console.log(time + " in " + timesStr.join() + ": " + timeInSpan(time, timesStr));
         if (timeInSpan(time, timesStr) == true) {
             tableCol.classList.add("booked-time");
+            if (room.match(PCRoomsRegEx)) {
+                tableCol.classList.add("PC");
+            }
         }
         tableRow.appendChild(tableCol);
     }
-
-    // let currTime = minTime;
-
-    // timesStr.forEach(t => {
-
-    //     let startInt = parseInt(t.substr(0, 2));
-    //     let endInt = parseInt(t.substr(3, 2));
-
-    //     for (let time = currTime; time <= maxTime; time++) {
-    //         let tableCol = document.createElement("td");
-    //         tableCol.className = "time-box";
-
-    //         if (time >= startInt && time < endInt) {
-    //             tableCol.classList.add("booked-time");
-    //         }
-
-    //         tableRow.appendChild(tableCol);
-    //     }
-
-    //     currTime = endInt;
-    // });
     
     timeline.appendChild(tableRow);
-}
-
-function addRoomTimeline(room, timesStr) {
-    let currTime = minTime;
-    const timeline = document.getElementById("timeline");
-    let container = document.createElement("div");
-    let label = document.createElement("div");
-    container.className = "timeline-container";
-    label.className = "timeline-label";
-    label.innerHTML = room;
-    container.appendChild(label);
-
-    let type = "PC";
-    if (room.match(linuxRoomsRegEx)) {
-        type = "linux";
-    }
-
-    timesStr.forEach(t => {
-
-        let startInt = parseInt(t.substr(0, 2));
-        let endInt = parseInt(t.substr(3, 2));
-
-        let hours = endInt - startInt;
-
-        for (let time = currTime; time < maxTime; time++) {
-            if (time < startInt) {
-                let emptyDiv = document.createElement("div");
-                emptyDiv.className = "timeline-item hide one-hour";
-                container.appendChild(emptyDiv);
-            } else if (time == endInt) {
-                let d = document.createElement("div");
-                let startdiv = document.createElement("div");
-                let enddiv = document.createElement("div");
-                startdiv.className = "starttime";
-                startdiv.innerHTML = startInt;
-                enddiv.className = "endtime";
-                enddiv.innerHTML = endInt;
-                let hourClass = "one-hour";
-                switch (hours) {
-                    case 2:
-                        hourClass = "two-hours";
-                        break;
-                    case 3:
-                        hourClass = "three-hours";
-                        break;
-                    case 4:
-                        hourClass = "four-hours";
-                        break;
-
-                    default:
-                        break;
-                }
-                d.className = "timeline-item " + hourClass + " " + type;
-                d.appendChild(startdiv);
-                d.appendChild(enddiv);
-                container.appendChild(d);
-            }
-        }
-        currTime = endInt;
-    });
-
-    while (currTime < maxTime) {
-        currTime += 1;
-        let emptyDiv = document.createElement("div");
-            emptyDiv.className = "timeline-item hide one-hour";
-            container.appendChild(emptyDiv);
-    }
-
-    timeline.appendChild(container);
 }
 
 function addRoomCheckboxes() {
@@ -248,7 +160,6 @@ function formatTimes(events, date) {
                 times = times.concat(start.substr(0, 2) + " " + end.substr(0, 2));
             }
         }
-        // addRoomTimeline(room, times);
         addRoomTimelineTable(room, times);
         d.appendChild(p);
         mainData.appendChild(d);
