@@ -31,13 +31,17 @@ function changeDate(dir) {
     console.log("Setting date to " + dateControl.value);
 }
 
-function resetAll() {
+function resetContent() {
+    document.getElementById("timeline").innerHTML = "";
     document.getElementById("dateinfo").innerHTML = "";
     document.getElementById("data").innerHTML = "";
     document.getElementById("main-data").innerHTML = "";
     document.getElementById("room-div").innerHTML = "";
+}
+
+function resetAll() {
+    resetContent();
     document.querySelector('input[type="date"]').value = "";
-    document.getElementById("timeline").innerHTML = "";
     // addRoomCheckboxes();
 }
 
@@ -133,8 +137,6 @@ function changeToTodaysDate() {
 
 function formatTimes(events, date) {
     const mainData = document.getElementById("main-data");
-    mainData.innerHTML = "";
-    document.getElementById("timeline").innerHTML = "";
     for (let i = 0; i < relRooms.length; i++) {
         let times = [];
         const room = relRooms[i];
@@ -171,6 +173,7 @@ function formatTimes(events, date) {
 }
 
 function fetchCalendar() {
+    resetContent();
 
     console.log("Fetching calendar data...")
     const URL = "https://cloud.timeedit.net/liu/web/schema/ri687Q18Y99Z68Q5X6859196y1Z6589XX460189Q6178886X8818XXX989986815886X6X989818118196631884XX12999916X78066668008198X5917169948X68198341XX05X668X986581WX6X51y9785X888y1481Y1X7lX7Z58X8Z8Q6l776108687m6o8cQu6Z53o5yL0W0W5bQcplSwyW5Z9qdXUXa86jRmW0ld7Qn25W9%C3%A4Laca0ZQhQcZ4v66nn.ics";
@@ -188,9 +191,8 @@ function fetchCalendar() {
             console.log(events);
 
             if (!events[date]) {
+                resetContent();
                 document.getElementById("dateinfo").innerText = "Inga bokade salar " + date.toLocaleDateString();
-                document.getElementById("data").innerText = "";
-                document.getElementById("main-data").innerHTML = "";
             } else {
                 formatTimes(events, date)
                 document.getElementById("dateinfo").innerText = "Visar bokade salar " + date.toLocaleDateString();
