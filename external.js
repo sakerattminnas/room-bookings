@@ -3,7 +3,7 @@ const relRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|PC1|PC2|PC3|PC4|P
 // const PCRoomsRegEx = /PC1|PC2|PC3|PC4|PC5/g;
 const linuxRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
 const minTime = 8;
-const maxTime = 22;
+const maxTime = 20;
 
 function popupFunc(element) {
     var popup = element.children[1];
@@ -45,6 +45,79 @@ function resetAll() {
     resetContent();
     document.querySelector('input[type="date"]').value = "";
     // addRoomCheckboxes();
+}
+
+function prepareTable() {
+    const timeline = document.getElementById("timeline");
+    const table = document.createElement("table");
+    table.id = "timeline-table";
+    let tableRow = document.createElement("tr");
+    let tableCol = document.createElement("th");
+    tableCol.innerHTML = "Rum";
+    tableRow.appendChild(tableCol);
+    for (let time = minTime; time <= maxTime; time++) {
+        let tableCol = document.createElement("th");
+        // tableCol.className = "time-box";
+        tableCol.innerHTML = time;
+        tableCol.innerText = tableCol.innerText + "-";
+        tableRow.appendChild(tableCol);
+    }
+    table.appendChild(tableRow);
+    timeline.appendChild(table);
+}
+
+function timeInSpan(time, timesStr) {
+    let inSpan = false;
+    timesStr.forEach(t => {
+        let start = parseInt(t.substr(0, 2));
+        let end = parseInt(t.substr(3, 2));
+        if (time >= start && time < end) {
+            inSpan = true;
+        }
+    });
+    return inSpan;
+}
+
+function addRoomTimelineTable(room, timesStr) {
+    const timeline = document.getElementById("timeline-table");
+    let tableRow = document.createElement("tr");
+    let tableCol = document.createElement("td");
+    tableCol.innerHTML = room;
+    tableCol.className = "label";
+    tableRow.appendChild(tableCol);
+
+    for (let time = minTime; time <= maxTime; time++) {
+        let tableCol = document.createElement("td");
+        tableCol.className = "time-box";
+        console.log(time + " in " + timesStr.join() + ": " + timeInSpan(time, timesStr));
+        if (timeInSpan(time, timesStr) == true) {
+            tableCol.classList.add("booked-time");
+        }
+        tableRow.appendChild(tableCol);
+    }
+
+    // let currTime = minTime;
+
+    // timesStr.forEach(t => {
+
+    //     let startInt = parseInt(t.substr(0, 2));
+    //     let endInt = parseInt(t.substr(3, 2));
+
+    //     for (let time = currTime; time <= maxTime; time++) {
+    //         let tableCol = document.createElement("td");
+    //         tableCol.className = "time-box";
+
+    //         if (time >= startInt && time < endInt) {
+    //             tableCol.classList.add("booked-time");
+    //         }
+
+    //         tableRow.appendChild(tableCol);
+    //     }
+
+    //     currTime = endInt;
+    // });
+    
+    timeline.appendChild(tableRow);
 }
 
 function addRoomTimeline(room, timesStr) {
@@ -145,6 +218,7 @@ function changeToTodaysDate() {
 
 function formatTimes(events, date) {
     const mainData = document.getElementById("main-data");
+    prepareTable();
     for (let i = 0; i < relRooms.length; i++) {
         let times = [];
         const room = relRooms[i];
@@ -174,7 +248,8 @@ function formatTimes(events, date) {
                 times = times.concat(start.substr(0, 2) + " " + end.substr(0, 2));
             }
         }
-        addRoomTimeline(room, times);
+        // addRoomTimeline(room, times);
+        addRoomTimelineTable(room, times);
         d.appendChild(p);
         mainData.appendChild(d);
     }

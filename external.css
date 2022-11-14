@@ -1,5 +1,6 @@
 :root {
     --one-hour: 8%;
+    --table-hour: 5%;
     --margin-between-hours: 2px;
 }
 
@@ -176,4 +177,22 @@ input {
 
 .PC {
     background-color: rgba(174, 191, 218, 0.319);
+}
+
+table {
+    border-collapse: collapse;
+}
+
+tr {
+    height: 30px;
+    max-width: 95%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    width: var(--table-hour);
+}
+
+td.booked-time {
+    background-color: rgba(174, 218, 188, 0.319);
 }
