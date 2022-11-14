@@ -1,5 +1,7 @@
 const relRooms = ["Asgård", "Boren", "Egypten", "Glan", "Hunn", "Olympen", "PC1", "PC2", "PC3", "PC4", "PC5", "Roxen", "SU00", "SU01", "SU02", "SU03", "SU04", "SU10", "SU11", "SU12", "SU13", "SU14", "SU15\/16", "SU17\/18", "SU24", "SU25"];
 const relRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|PC1|PC2|PC3|PC4|PC5|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
+const minTime = 8;
+const maxTime = 22;
 
 function popupFunc(element) {
     var popup = element.children[1];
@@ -23,7 +25,71 @@ function resetAll() {
     document.getElementById("main-data").innerHTML = "";
     document.getElementById("room-div").innerHTML = "";
     document.querySelector('input[type="date"]').value = "";
+    document.getElementById("timeline").innerHTML = "";
     // addRoomCheckboxes();
+}
+
+function addRoomTimeline(room, timesStr) {
+    let currTime = minTime;
+    const timeline = document.getElementById("timeline");
+    let container = document.createElement("div");
+    let label = document.createElement("div");
+    container.className = "timeline-container";
+    label.className = "timeline-label";
+    // label.className = "timeline-item timeline-label";
+    label.innerHTML = room;
+    container.appendChild(label);
+    timesStr.forEach(t => {
+
+        let startInt = parseInt(t.substr(0, 2));
+        let endInt = parseInt(t.substr(3, 2));
+
+        let hours = endInt - startInt;
+
+        for (let time = currTime; time < maxTime; time++) {
+            if (time < startInt) {
+                let emptyDiv = document.createElement("div");
+                emptyDiv.className = "timeline-item hide one-hour";
+                container.appendChild(emptyDiv);
+            } else if (time == endInt) {
+                let d = document.createElement("div");
+                let startdiv = document.createElement("div");
+                let enddiv = document.createElement("div");
+                startdiv.className = "starttime";
+                startdiv.innerHTML = startInt;
+                enddiv.className = "endtime";
+                enddiv.innerHTML = endInt;
+                switch (hours) {
+                    case 2:
+                        d.className = "timeline-item two-hours"
+                        break;
+                    case 3:
+                        d.className = "timeline-item three-hours"
+                        break;
+                    case 4:
+                        d.className = "timeline-item four-hours"
+                        break;
+
+                    default:
+                        d.className = "timeline-item one-hour"
+                        break;
+                }
+                d.appendChild(startdiv);
+                d.appendChild(enddiv);
+                container.appendChild(d);
+            }
+        }
+        currTime = endInt;
+    });
+
+    while (currTime < maxTime) {
+        currTime += 1;
+        let emptyDiv = document.createElement("div");
+            emptyDiv.className = "timeline-item hide one-hour";
+            container.appendChild(emptyDiv);
+    }
+
+    timeline.appendChild(container);
 }
 
 function addRoomCheckboxes() {
@@ -56,13 +122,14 @@ function changeToTodaysDate() {
 function formatTimes(events, date) {
     const mainData = document.getElementById("main-data");
     mainData.innerHTML = "";
+    document.getElementById("timeline").innerHTML = "";
     for (let i = 0; i < relRooms.length; i++) {
+        let times = [];
         const room = relRooms[i];
         const eventInfo = events[date][room];
         let d = document.createElement("div");
         let h = document.createElement("h2");
         h.innerText = room;
-        // mainData.appendChild(h);
         d.appendChild(h);
         let p = document.createElement("p");
         for (const infoAndTimeSpan in eventInfo) {
@@ -76,17 +143,18 @@ function formatTimes(events, date) {
                 let start = ei["start"].toLocaleTimeString().substring(0, 5);
                 let end = ei["end"].toLocaleTimeString().substring(0, 5);
 
-                // p.innerHTML = p.innerHTML + start + " - " + end + "<br>";
                 innerSpan.innerText = ei["courses"];
                 outerSpan.innerHTML = start + " - " + end + "<br>";
                 outerSpan.appendChild(innerSpan);
                 outerSpan.setAttribute("onclick", "popupFunc(this)");
                 p.appendChild(outerSpan);
+
+                times = times.concat(start.substr(0, 2) + " " + end.substr(0, 2));
             }
         }
+        addRoomTimeline(room, times);
         d.appendChild(p);
         mainData.appendChild(d);
-        // mainData.appendChild(p);
     }
 }
 
@@ -188,7 +256,7 @@ function eventToJSON(event, JSONevents) {
     let course = courses.next();
     let coursesStr = "";
     while (!course.done) {
-        if(coursesStr.length == 0) {
+        if (coursesStr.length == 0) {
             coursesStr = course.value[0];
         } else {
             coursesStr = coursesStr + ", " + course.value[0];

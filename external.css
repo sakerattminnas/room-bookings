@@ -1,3 +1,8 @@
+:root {
+    --one-hour: 8%;
+    --margin-between-hours: 2px;
+}
+
 body {
     margin: 3%;
     font-family: 'Courier New', Courier, monospace;
@@ -109,7 +114,7 @@ input {
     }
 }
 
-/* .timeline-container {
+.timeline-container {
     display: flex;
     flex-wrap: nowrap;
     padding: 0 0 10px 0;
@@ -117,31 +122,51 @@ input {
 
 .timeline-item {
     background-color: rgba(174, 218, 188, 0.319);
-    padding: 2px;
+    /* padding: 2px; */
     margin: 0 2px 0 0;
     border-radius: 2px;
-    border: 1px solid gray;
-    min-width: 30px;
+    /* border: 1px solid gray; */
+    font-size: xx-small;
+    height: 30px;
 }
 
 .timeline-label {
     background-color: white;
     border: 0;
-    width: 60px;
+    width: 80px;
+    font-size: small;
+    font-weight: bold;
+    margin: 0 2px 0 0;
+    height: 30px;
+    padding: 5px;
 }
 
-.time {
-    font-size: xx-small;
+.one-hour {
+    width: var(--one-hour);
 }
+
+.two-hours {
+    width: calc(var(--margin-between-hours) + var(--one-hour) * 2);
+}
+
+.three-hours {
+    width: calc(var(--margin-between-hours) * 2 + var(--one-hour) * 3);
+}
+
+.four-hours {
+    width: calc(var(--margin-between-hours) * 3 + var(--one-hour) * 4);
+}
+
 
 .starttime {
     text-align: left;
 }
 
 .endtime {
+    padding-top: 10px;
     text-align: right;
 }
 
 .hide {
     visibility: hidden;
-} */
+}
