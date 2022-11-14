@@ -59,7 +59,7 @@ function prepareTable() {
         let tableCol = document.createElement("th");
         // tableCol.className = "time-box";
         tableCol.innerHTML = time;
-        tableCol.innerText = tableCol.innerText + "-";
+        tableCol.innerText = tableCol.innerText;
         tableRow.appendChild(tableCol);
     }
     table.appendChild(tableRow);

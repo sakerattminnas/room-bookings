@@ -181,6 +181,16 @@ input {
 
 table {
     border-collapse: collapse;
+    font-size: small;
+}
+
+tr:nth-child(even) {
+    border-top: 1px solid #dddddd6e;
+    border-bottom: 1px solid #dddddd6e;
+}
+
+td:nth-child(2), td:nth-child(4), td:nth-child(6), td:nth-child(7), td:nth-child(9), td:nth-child(11), td:nth-child(13) {
+    border-left: 1px solid #dddddd;
 }
 
 tr {
@@ -188,8 +198,12 @@ tr {
     max-width: 95%;
 }
 
+th {
+    font-size: xx-small;
+}
+
 td, th {
-    border: 1px solid #dddddd;
+    /* border: 1px solid #dddddd; */
     width: var(--table-hour);
 }
 
