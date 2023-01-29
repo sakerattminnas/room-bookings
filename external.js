@@ -1,7 +1,11 @@
-const relRooms = ["Asgård", "Boren", "Egypten", "Glan", "Hunn", "Olympen", "PC1", "PC2", "PC3", "PC4", "PC5", "Roxen", "SU00", "SU01", "SU02", "SU03", "SU04", "SU10", "SU11", "SU12", "SU13", "SU14", "SU15\/16", "SU17\/18", "SU24", "SU25"];
-const relRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|PC1|PC2|PC3|PC4|PC5|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
-const PCRoomsRegEx = /PC1|PC2|PC3|PC4|PC5/g;
-// const linuxRoomsRegEx = /Asgård|Boren|Egypten|Glan|Hunn|Olympen|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
+const relRooms = ["MUX1", "MUX2", "MUX3", "MUX4", "Asgård", "Boren", "Egypten", 
+                  "Glan", "Hunn", "Olympen", "PC1", "PC2", "PC3", "PC4", "PC5", 
+                  "Roxen", "SU00", "SU01", "SU02", "SU03", "SU04", "SU10", 
+                  "SU11", "SU12", "SU13", "SU14", "SU15\/16", "SU17\/18", 
+                  "SU24", "SU25"];
+const relRoomsRegEx = /MUX[1-4]|Asgård|Boren|Egypten|Glan|Hunn|Olympen|PC[1-5]|Roxen|SU[0-1][0-5]|SU15\/16|SU17\/18/g;
+const PCRoomsRegEx = /PC[1-5]/g;
+const linuxRoomsRegEx = /MUX[1-4]|Asgård|Boren|Egypten|Glan|Hunn|Olympen|Roxen|SU00|SU01|SU02|SU03|SU04|SU10|SU11|SU12|SU13|SU14|SU15\/16|SU17\/18|SU24|SU25/g;
 const minTime = 8;
 const maxTime = 20;
 
@@ -97,7 +101,7 @@ function addRoomTimelineTable(room, timesStr) {
         }
         tableRow.appendChild(tableCol);
     }
-    
+
     timeline.appendChild(tableRow);
 }
 
@@ -170,7 +174,7 @@ function fetchCalendar() {
     resetContent();
 
     console.log("Fetching calendar data...")
-    const URL = "https://cloud.timeedit.net/liu/web/schema/ri687Q18Y99Z68Q5X6859196y1Z6589XX460189Q6178886X8818XXX989986815886X6X989818118196631884XX12999916X78066668008198X5917169948X68198341XX05X668X986581WX6X51y9785X888y1481Y1X7lX7Z58X8Z8Q6l776108687m6o8cQu6Z53o5yL0W0W5bQcplSwyW5Z9qdXUXa86jRmW0ld7Qn25W9%C3%A4Laca0ZQhQcZ4v66nn.ics";
+    const URL = "https://cloud.timeedit.net/liu/web/schema/ri680Q18Y00Z61Q5X1895106y1Z6500XX465109Q6178886X4117XXX212616893807X1X115993192117771811XX98529297X10211622399170X2516164771X88810711XX26X168X965981WX6X5119770X88861481Y1X7XX5758X8X886977618868685884706188X5XX699813198586766887868699180618281XXXX8981119996X6618148XX99891X518X251319988XX8990866W6786X58160161188YX8961090868856XX2X8925Z66834X99111X408y83bmZ7SlWQo5dycL5lR9WalZcQ0l0c5nqXZ6UQmXuQ0p5woyd5Wyn8a72Q5ZW6a3%C3%A4vhWoZnQj90L.ics";
 
     let date = new Date(document.querySelector("input[type=date]").value);
     date.setHours(0, 0, 0);
