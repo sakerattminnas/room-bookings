@@ -170,11 +170,19 @@ function formatTimes(events, date) {
     }
 }
 
+function getURL() {
+    require('fs').readFile('url.txt', 'utf-8', (err, data) => {
+        if (err) throw err;
+        return data;
+    })
+}
+
 function fetchCalendar() {
     resetContent();
 
-    console.log("Fetching calendar data...")
     const URL = "https://cloud.timeedit.net/liu/web/schema/ri680Q18Y00Z61Q5X1895106y1Z6500XX465109Q6178886X4117XXX212616893807X1X115993192117771811XX98529297X10211622399170X2516164771X88810711XX26X168X965981WX6X5119770X88861481Y1X7XX5758X8X886977618868685884706188X5XX699813198586766887868699180618281XXXX8981119996X6618148XX99891X518X251319988XX8990866W6786X58160161188YX8961090868856XX2X8925Z66834X99111X408y83bmZ7SlWQo5dycL5lR9WalZcQ0l0c5nqXZ6UQmXuQ0p5woyd5Wyn8a72Q5ZW6a3%C3%A4vhWoZnQj90L.ics";
+    // URL = getURL();
+    console.log("Fetching calendar data...")
 
     let date = new Date(document.querySelector("input[type=date]").value);
     date.setHours(0, 0, 0);
