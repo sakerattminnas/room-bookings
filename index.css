@@ -1,0 +1,26 @@
+body {
+    background-color: gray;
+}
+
+.choice-div {
+    width: fit-content;
+    padding: 0.5em 1em 0.5em 1em;
+    margin: auto;
+    background-color: rgb(196, 196, 196);
+}
+
+form {
+    width: fit-content;
+    padding: 0 1em 1em 1em;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+}
+
+form > label, input {
+    padding: 0 0.5em 0 0.5em;
+}
+
+#index-submit {
+    margin-top: 1em;
+    grid-column: 1 / 3;
+}

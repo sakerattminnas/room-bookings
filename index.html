@@ -2,23 +2,22 @@
 <head>
     <title>Salsbokningar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <script type="text/javascript" src="external.js"></script>
-    <link rel="stylesheet" href="external.css">
+    <!-- <script type="text/javascript" src="external.js"></script> -->
+    <link rel="stylesheet" href="index.css">
 </head>
-<body onload="setUp()">
+<body>
     
-    <div id="room-div" class="room-checkbox"></div>
-    <form>
-        <button type="button" onclick="resetAll()">Rensa</button>
-        <button type="button" onclick="changeToTodaysDate()">Dagens datum</button>
-        <button type="button" onclick="changeDate('-')"><<</button>
-        <input type="date" id="dateinput" name="dateinput"> 
-        <button type="button" onclick="changeDate('+')">>></button><br><br>
-        <button type="button" onclick="fetchCalendar()" autofocus>Hämta kalender</button>
-    </form>
-    <h1 id="dateinfo"></h1>
-    <p id="data"></p>
-    <div id="timeline"></div>
-    <div id="main-data"></div>
+    <div id="choice-div" class="choice-div">
+        <p>Vilka typer av salar?</p>
+        <form action="/main.html">
+            <input type="checkbox" name="datorsalar">
+            <label for="datorsalar">Datorsalar</label>
+            <input type="checkbox" name="grupprum">
+            <label for="grupprum">Grupprum</label>
+            <input type="checkbox" name="lektionssal">
+            <label for="lektionssal">Lektionssal</label>
+            <input id="index-submit" type="submit" value="Gå vidare">
+        </form>
+    </div>
 
 </body>
