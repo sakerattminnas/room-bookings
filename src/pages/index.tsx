@@ -1,189 +1,76 @@
 import * as React from "react"
 import type { HeadFC, PageProps } from "gatsby"
+import { icalToJSON } from "../scripts.ts"
 
-const pageStyles = {
-  color: "#232129",
-  padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
-}
-const headingStyles = {
-  marginTop: 0,
-  marginBottom: 64,
-  maxWidth: 320,
-}
-const headingAccentStyles = {
-  color: "#663399",
-}
-const paragraphStyles = {
-  marginBottom: 48,
-}
-const codeStyles = {
-  color: "#8A6534",
-  padding: 4,
-  backgroundColor: "#FFF4DB",
-  fontSize: "1.25rem",
-  borderRadius: 4,
-}
-const listStyles = {
-  marginBottom: 96,
-  paddingLeft: 0,
-}
-const doclistStyles = {
-  paddingLeft: 0,
-}
-const listItemStyles = {
-  fontWeight: 300,
-  fontSize: 24,
-  maxWidth: 560,
-  marginBottom: 30,
+/* 
+  Hus:
+
+  A-huset
+  B-huset
+  C-huset
+  Fysikhuset
+  Key-huset
+
+
+  Lokaltyp:
+
+  
+
+*/
+
+// interface HTTPResponse extends JSON {
+//   code: number,
+//   statusText?: string,
+//   headers?: string,
+//   body?: ReadableStream,
+// }
+
+interface icalJSON {
+  body: string,
 }
 
-const linkStyle = {
-  color: "#8954A8",
-  fontWeight: "bold",
-  fontSize: 16,
-  verticalAlign: "5%",
-}
-
-const docLinkStyle = {
-  ...linkStyle,
-  listStyleType: "none",
-  display: `inline-block`,
-  marginBottom: 24,
-  marginRight: 12,
-}
-
-const descriptionStyle = {
-  color: "#232129",
-  fontSize: 14,
-  marginTop: 10,
-  marginBottom: 0,
-  lineHeight: 1.25,
-}
-
-const docLinks = [
-  {
-    text: "TypeScript Documentation",
-    url: "https://www.gatsbyjs.com/docs/how-to/custom-configuration/typescript/",
-    color: "#8954A8",
-  },
-  {
-    text: "GraphQL Typegen Documentation",
-    url: "https://www.gatsbyjs.com/docs/how-to/local-development/graphql-typegen/",
-    color: "#8954A8",
-  }
-]
-
-const badgeStyle = {
-  color: "#fff",
-  backgroundColor: "#088413",
-  border: "1px solid #088413",
-  fontSize: 11,
-  fontWeight: "bold",
-  letterSpacing: 1,
-  borderRadius: 4,
-  padding: "4px 6px",
-  display: "inline-block",
-  position: "relative" as "relative",
-  top: -2,
-  marginLeft: 10,
-  lineHeight: 1,
-}
-
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial/getting-started/",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-    color: "#E95800",
-  },
-  {
-    text: "How to Guides",
-    url: "https://www.gatsbyjs.com/docs/how-to/",
-    description:
-      "Practical step-by-step guides to help you achieve a specific goal. Most useful when you're trying to get something done.",
-    color: "#1099A8",
-  },
-  {
-    text: "Reference Guides",
-    url: "https://www.gatsbyjs.com/docs/reference/",
-    description:
-      "Nitty-gritty technical descriptions of how Gatsby works. Most useful when you need detailed information about Gatsby's APIs.",
-    color: "#BC027F",
-  },
-  {
-    text: "Conceptual Guides",
-    url: "https://www.gatsbyjs.com/docs/conceptual/",
-    description:
-      "Big-picture explanations of higher-level Gatsby concepts. Most useful for building understanding of a particular topic.",
-    color: "#0D96F2",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-    color: "#8EB814",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    badge: true,
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-    color: "#663399",
-  },
-]
+const URL = "https://cloud.timeedit.net/liu/web/schema/ri679Q93Y09Z55Q5X0870609y6Z8509XX480949Q5777978X6864XXX674426894995X6X273577113136669779XX92054515X36156634439147X1456180457X47787011XX45X665X674371WX6X5159457X74491405Y5X3XX4350X4X006043916067068075939000X1XX909357800009399543393900549250035XXXX3005050406X9614910XX40245X517X071951170XX7452759W6849X00512595501YX0193191090059XX0X0400X99014X09555X2206056105000X49215X9X805004599090XX29552739270009X2252XXX080406215006X9X78923X514106W47780XX1406505607Y188625073598X5926561097X01865811X957X689X4404816X7X2213184X5X36418171X5XX8520X3X88801562508279305166688XX3XX806659155059506196866W07142758871XX7X40Y9945707X6611108XX00901X118X451111188XX8003866667108X81524611868X0670292868906XX8X8570X66011X71111X4206081181X70X06911X4X30550266W992X606712596288Y89X9412XXX480207017898X6X680568117136611130XX06655616X08166706101185X6698183919X78598494X859X665X0104926X9X1168688X8X56429512X1XX8496X65XY656561526699558167W878X5XX696812358586761187867655181618889XXXX8581915536X2148189XX63467X118X761171105XX0276862665958X99244974367X5598432X63309X03XY390X9W028X09544X7609981534330X09644X5X004506599090XX16442499633538X5712XXX695958048886X6X982018112596699182XX12656717X71777616414910X22559W3512X51Y31911X527X67XX1996849X198512934X7X21990581X2XX6959X5X101939111296197205828148X3XX688312658986069552461655143418133XXXX4581615596X1254177XX75418X718X793874644X3X6568641W3297XY6707717957X6118400868796XX7X8979X16777X97114X6118569059316X92099X1X578691189983XX26549587159816X7815XXX6X6516859888X664889481141866572Y8XX8065661WX17996696892138X8676194686X68878311X868X667X4498816X6X1111902X8X66998181X1XX6166X6X886699611669453681616881X8XX1661267516Y68361916W168850899X841XXX66600422686X6611021XX16061X110X341121680XX8623836662168X82421611848X6665165468866XX8X8796X69602X51211X32660135848X5X62311X0X9616621666W6XX165148262888Y666313XXX697757343887X6X680370115476651999XX48676747X48566686881140X7741162360X78158881X876X660X7686846X7X1588498XXX51880884X8XX687376X1187166916W79193Y1681811X9XX646881271781811178818144881311888XXXX8418284076X6612138XX17171X118X221411286XX8774367666168X85125619083X79W3215868X26XXY78235X26644X68114X9271740084206X56091X4X878772161668XX56486191342806X7314XXX682656518886X6X530573180108848889XX18662686X93180287342218X2816563783X1X89Y414X857X6W820353616X7X1112544X7X12407171X8XX2512X1X772705211120560171642871X8XX756756578796269144594869802743855XXXX2981018555X9614527X605485X50XX071954435XX8365YW9960057X74561611848X6665636868866XX8X8676X66665X61111X0668690851858X56152X7X671777167667XX4W210487058887X9151XXX588806113XY6X0X086489810106791881X819687846X08266646562148X8616263863X85818511X866X668X0656816X8X1310523X9X86578181X5XX6568X1X886675611877138885W16X88X5XX685618988586766484666688160618Y618XXX6881918968X6841128XX08671X198X129116754XX9982566675188X86771611858X666770786X88WXX8X8868866877X81151X6167883188689X58321X7X066284668862XX781114967Y8648X2367XXX288487313666X8X888338615386611681XX14288816X48266W98997108X8816168885X68868915XY88X668X9919X1985X1112953X8X86498181X1XX6188X8X886891611869064881616888X9XX666717898886966111167688118518841XXXX1681218876XW61246XXX28081X0117381552489XX889787656925YX84231611818X8663292868886XX8X8408X66822X81111X2386857181888X86411X9X881883166868XX46114766388886X2414XX7887906419886X6X5X443Y15014W004882XX14895936X99471149747747X7371718916X96776977X539X117X5777779X9X9191190X8X99995959X1XX9299X9X55996199996219295992955YX46X99912129X95W869992192765970395519XXXX4981356619X9981137XX61699X988X568499918XX1994169997617X79979989117X5990898197719XX7X2611X99299X19898X2919230979Y71X19499X7X6971199911951X1995154W17X779X8199XXX215289189719X9X729891888879291121XX88156299X08869126745540X6946566951X11867817X856X680X7595646X9X1110895X8X9678X78594XX6895X9XY86981W11669886981688888X4XX696811298986566178968699193018891XXXX9981915956X9919187XX96694X118X895155470XX8592866669498X01111W11X68X9668451Y68896XX8X8999X61611991815X7196517821889X66248X7X691906116969XX26112506008886X9212XXX985926213886X6X373218152149631884XX12999916X8806665644810XX6716479923X19808711X8951W7YX8471856X1X1510005X7X36708171X8XX9861X6X887107615193458111686828X8XX646816718186168128860611188918886XXXX818131156676W83498XX41051X519X4454180X7XXY779276955467X80871631858X3665802119816XX8X8456X62681X61921X6476635F8dF69Z6t12193X6QE414D6B8n5CF00QZ012815t1Q3Z7FDD04ABE565FAF5B08.ics";
 
 const IndexPage: React.FC<PageProps> = () => {
+
+  const [responseData, setResponseData] = React.useState('')
+  let calendarInfo: string;
+
+  function iicalToJSON(ical: string): icalJSON {
+    return {
+      body: ical
+    }
+  }
+
+  React.useEffect(() => {
+    fetch(URL)
+      .then((response) => {
+        let charsReceived = 0;
+        let result: string;
+        const reader = response.body ? response.body.getReader() : undefined;
+        reader?.read().then(function processResponseBody({done, value}) {
+          if (done) {
+            console.log("Stream complete");
+            icalToJSON("this doesn't matter")
+            // setResponseData(result);
+            calendarInfo = result;
+            console.log(iicalToJSON(result))
+            return result;
+          }
+          charsReceived += value.length;
+          result += new TextDecoder().decode(value);
+
+          return reader.read().then(processResponseBody);
+        })
+      })
+  }, [])
+
   return (
-    <main style={pageStyles}>
-      <h1 style={headingStyles}>
-        Congratulations
-        <br />
-        <span style={headingAccentStyles}>— you just made a Gatsby site! 🎉🎉🎉</span>
-      </h1>
-      <p style={paragraphStyles}>
-        Edit <code style={codeStyles}>src/pages/index.tsx</code> to see this page
-        update in real-time. 😎
-      </p>
-      <ul style={doclistStyles}>
-        {docLinks.map(doc => (
-          <li key={doc.url} style={docLinkStyle}>
-            <a
-              style={linkStyle}
-              href={`${doc.url}?utm_source=starter&utm_medium=ts-docs&utm_campaign=minimal-starter-ts`}
-            >
-              {doc.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <ul style={listStyles}>
-        {links.map(link => (
-          <li key={link.url} style={{ ...listItemStyles, color: link.color }}>
-            <span>
-              <a
-                style={linkStyle}
-                href={`${link.url}?utm_source=starter&utm_medium=start-page&utm_campaign=minimal-starter-ts`}
-              >
-                {link.text}
-              </a>
-              {link.badge && (
-                <span style={badgeStyle} aria-label="New Badge">
-                  NEW!
-                </span>
-              )}
-              <p style={descriptionStyle}>{link.description}</p>
-            </span>
-          </li>
-        ))}
-      </ul>
-      <img
-        alt="Gatsby G Logo"
-        src="data:image/svg+xml,%3Csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2a10 10 0 110 20 10 10 0 010-20zm0 2c-3.73 0-6.86 2.55-7.75 6L14 19.75c3.45-.89 6-4.02 6-7.75h-5.25v1.5h3.45a6.37 6.37 0 01-3.89 4.44L6.06 9.69C7 7.31 9.3 5.63 12 5.63c2.13 0 4 1.04 5.18 2.65l1.23-1.06A7.959 7.959 0 0012 4zm-8 8a8 8 0 008 8c.04 0 .09 0-8-8z' fill='%23639'/%3E%3C/svg%3E"
-      />
+    <main>
+      <p>This is the index page.</p>
+      <div>
+        {calendarInfo}
+      </div>
     </main>
   )
 }
