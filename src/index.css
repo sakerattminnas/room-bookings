@@ -1,0 +1,59 @@
+.input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    background-color: lightblue;
+    border-radius: 3px;
+    width: fit-content;
+    margin: auto;
+}
+
+.between-times {
+    padding: 0 0.5em 0 0.5em;
+}
+
+.input-item > input {
+    width: fit-content;
+    height: fit-content;
+}
+
+.input-item {
+    padding: 1em;
+    row-gap: 0.2em;
+}
+
+button {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    background-color: white;
+    border-radius: 3px;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    input, select, button, .between-time, .between-times {
+        font-size: x-large;
+    }
+}
+
+input, select {
+    background-color: white;
+}
+
+#info {
+    display: hidden;
+}
+
+p {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+p#info {
+    text-align: center;
+}

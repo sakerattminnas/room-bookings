@@ -1,6 +1,8 @@
-import * as React from "react"
-import type { HeadFC, PageProps } from "gatsby"
-import { icalToJSON } from "../scripts.ts"
+import * as React from "react";
+import type { HeadFC, PageProps } from "gatsby";
+import { icalToJSON, URL, icalEvent, eventsAtDate, getRoomsBookedAt } from "../scripts/ical";
+import { DateTime, today } from "../scripts/date"
+import "../index.css";
 
 /* 
   Hus:
@@ -14,67 +16,159 @@ import { icalToJSON } from "../scripts.ts"
 
   Lokaltyp:
 
-  
-
 */
 
-// interface HTTPResponse extends JSON {
-//   code: number,
-//   statusText?: string,
-//   headers?: string,
-//   body?: ReadableStream,
-// }
-
-interface icalJSON {
-  body: string,
-}
-
-const URL = "https://cloud.timeedit.net/liu/web/schema/ri679Q93Y09Z55Q5X0870609y6Z8509XX480949Q5777978X6864XXX674426894995X6X273577113136669779XX92054515X36156634439147X1456180457X47787011XX45X665X674371WX6X5159457X74491405Y5X3XX4350X4X006043916067068075939000X1XX909357800009399543393900549250035XXXX3005050406X9614910XX40245X517X071951170XX7452759W6849X00512595501YX0193191090059XX0X0400X99014X09555X2206056105000X49215X9X805004599090XX29552739270009X2252XXX080406215006X9X78923X514106W47780XX1406505607Y188625073598X5926561097X01865811X957X689X4404816X7X2213184X5X36418171X5XX8520X3X88801562508279305166688XX3XX806659155059506196866W07142758871XX7X40Y9945707X6611108XX00901X118X451111188XX8003866667108X81524611868X0670292868906XX8X8570X66011X71111X4206081181X70X06911X4X30550266W992X606712596288Y89X9412XXX480207017898X6X680568117136611130XX06655616X08166706101185X6698183919X78598494X859X665X0104926X9X1168688X8X56429512X1XX8496X65XY656561526699558167W878X5XX696812358586761187867655181618889XXXX8581915536X2148189XX63467X118X761171105XX0276862665958X99244974367X5598432X63309X03XY390X9W028X09544X7609981534330X09644X5X004506599090XX16442499633538X5712XXX695958048886X6X982018112596699182XX12656717X71777616414910X22559W3512X51Y31911X527X67XX1996849X198512934X7X21990581X2XX6959X5X101939111296197205828148X3XX688312658986069552461655143418133XXXX4581615596X1254177XX75418X718X793874644X3X6568641W3297XY6707717957X6118400868796XX7X8979X16777X97114X6118569059316X92099X1X578691189983XX26549587159816X7815XXX6X6516859888X664889481141866572Y8XX8065661WX17996696892138X8676194686X68878311X868X667X4498816X6X1111902X8X66998181X1XX6166X6X886699611669453681616881X8XX1661267516Y68361916W168850899X841XXX66600422686X6611021XX16061X110X341121680XX8623836662168X82421611848X6665165468866XX8X8796X69602X51211X32660135848X5X62311X0X9616621666W6XX165148262888Y666313XXX697757343887X6X680370115476651999XX48676747X48566686881140X7741162360X78158881X876X660X7686846X7X1588498XXX51880884X8XX687376X1187166916W79193Y1681811X9XX646881271781811178818144881311888XXXX8418284076X6612138XX17171X118X221411286XX8774367666168X85125619083X79W3215868X26XXY78235X26644X68114X9271740084206X56091X4X878772161668XX56486191342806X7314XXX682656518886X6X530573180108848889XX18662686X93180287342218X2816563783X1X89Y414X857X6W820353616X7X1112544X7X12407171X8XX2512X1X772705211120560171642871X8XX756756578796269144594869802743855XXXX2981018555X9614527X605485X50XX071954435XX8365YW9960057X74561611848X6665636868866XX8X8676X66665X61111X0668690851858X56152X7X671777167667XX4W210487058887X9151XXX588806113XY6X0X086489810106791881X819687846X08266646562148X8616263863X85818511X866X668X0656816X8X1310523X9X86578181X5XX6568X1X886675611877138885W16X88X5XX685618988586766484666688160618Y618XXX6881918968X6841128XX08671X198X129116754XX9982566675188X86771611858X666770786X88WXX8X8868866877X81151X6167883188689X58321X7X066284668862XX781114967Y8648X2367XXX288487313666X8X888338615386611681XX14288816X48266W98997108X8816168885X68868915XY88X668X9919X1985X1112953X8X86498181X1XX6188X8X886891611869064881616888X9XX666717898886966111167688118518841XXXX1681218876XW61246XXX28081X0117381552489XX889787656925YX84231611818X8663292868886XX8X8408X66822X81111X2386857181888X86411X9X881883166868XX46114766388886X2414XX7887906419886X6X5X443Y15014W004882XX14895936X99471149747747X7371718916X96776977X539X117X5777779X9X9191190X8X99995959X1XX9299X9X55996199996219295992955YX46X99912129X95W869992192765970395519XXXX4981356619X9981137XX61699X988X568499918XX1994169997617X79979989117X5990898197719XX7X2611X99299X19898X2919230979Y71X19499X7X6971199911951X1995154W17X779X8199XXX215289189719X9X729891888879291121XX88156299X08869126745540X6946566951X11867817X856X680X7595646X9X1110895X8X9678X78594XX6895X9XY86981W11669886981688888X4XX696811298986566178968699193018891XXXX9981915956X9919187XX96694X118X895155470XX8592866669498X01111W11X68X9668451Y68896XX8X8999X61611991815X7196517821889X66248X7X691906116969XX26112506008886X9212XXX985926213886X6X373218152149631884XX12999916X8806665644810XX6716479923X19808711X8951W7YX8471856X1X1510005X7X36708171X8XX9861X6X887107615193458111686828X8XX646816718186168128860611188918886XXXX818131156676W83498XX41051X519X4454180X7XXY779276955467X80871631858X3665802119816XX8X8456X62681X61921X6476635F8dF69Z6t12193X6QE414D6B8n5CF00QZ012815t1Q3Z7FDD04ABE565FAF5B08.ics";
 
 const IndexPage: React.FC<PageProps> = () => {
+  const [responseData, setResponseData] = React.useState("");
+  const [startTime, setStartTime] = React.useState("");
+  const [endTime, setEndTime] = React.useState("");
+  let calendarInfo: icalEvent[] = new Array<icalEvent>();
 
-  const [responseData, setResponseData] = React.useState('')
-  let calendarInfo: string;
+  React.useEffect(() => {
+    fetch(URL).then((response) => {
+      let charsReceived = 0;
+      let result: string;
+      const reader = response.body ? response.body.getReader() : undefined;
+      reader?.read().then(function processResponseBody({ done, value }) {
+        if (done) {
+          console.log("Stream complete");
+          // setResponseData(result);
+          calendarInfo = icalToJSON(result);
+          return calendarInfo;
+        }
+        charsReceived += value.length;
+        result += new TextDecoder().decode(value);
 
-  function iicalToJSON(ical: string): icalJSON {
-    return {
-      body: ical
+        return reader.read().then(processResponseBody);
+      });
+    });
+  }, []);
+
+  function handleSubmit() {
+    const date = document.getElementById("date");
+    const infoParagraph = document.getElementById("info");
+    const startTimeHour = document.getElementById("start-time-hour");
+    const startTimeMinute = document.getElementById("start-time-minute");
+    const endTimeHour = document.getElementById("end-time-hour");
+    const endTimeMinute = document.getElementById("end-time-minute");
+    if (
+      infoParagraph instanceof HTMLParagraphElement &&
+      date instanceof HTMLInputElement &&
+      startTimeHour instanceof HTMLSelectElement &&
+      startTimeMinute instanceof HTMLSelectElement &&
+      endTimeHour instanceof HTMLSelectElement &&
+      endTimeMinute instanceof HTMLSelectElement
+    ) {
+      if (date.value === "") {
+        infoParagraph.innerText = "Datum saknas!";
+      } else {
+        const day = today() === date.value ? "idag" : `den ${date.value}`;
+        infoParagraph.innerText =
+          `Visar lediga lokaler ${day} från ` +
+          `${startTimeHour.value}:${startTimeMinute.value} - ` +
+          `${endTimeHour.value}:${endTimeMinute.value}`;
+      }
+      const roomDiv = document.getElementById("rooms");
+      if (roomDiv instanceof HTMLDivElement && calendarInfo.length > 0) {
+        console.log(date.value);
+        const events = eventsAtDate(new DateTime(date.value), calendarInfo);
+        let rooms = getRoomsBookedAt(events);
+        console.log(rooms);
+      } else {
+        infoParagraph.innerText = "Något gick fel, försök igen.";
+      }
     }
   }
 
-  React.useEffect(() => {
-    fetch(URL)
-      .then((response) => {
-        let charsReceived = 0;
-        let result: string;
-        const reader = response.body ? response.body.getReader() : undefined;
-        reader?.read().then(function processResponseBody({done, value}) {
-          if (done) {
-            console.log("Stream complete");
-            icalToJSON("this doesn't matter")
-            // setResponseData(result);
-            calendarInfo = result;
-            console.log(iicalToJSON(result))
-            return result;
-          }
-          charsReceived += value.length;
-          result += new TextDecoder().decode(value);
-
-          return reader.read().then(processResponseBody);
-        })
-      })
-  }, [])
-
   return (
     <main>
-      <p>This is the index page.</p>
-      <div>
-        {calendarInfo}
+      <p id="info"> </p>
+      <div className="input">
+        <div className="input-item">
+          <input id="date" type="date" defaultValue={today()}></input>
+        </div>
+        <div className="input-item">
+          <select id="start-time-hour" defaultValue={"8"}>
+            <option value="0">00</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+          </select>
+          <span className="between-time">:</span>
+          <select id="start-time-minute" defaultValue={"15"}>
+            <option value="0">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+          </select>
+          <span className="between-times">-</span>
+          <select id="end-time-hour" defaultValue={"10"}>
+            <option value="0">00</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+          </select>
+          <span className="between-time">:</span>
+          <select id="end-time-minute" defaultValue={"15"}>
+            <option value="0">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+          </select>
+        </div>
+
+        <div className="input-item">
+          <button id="fetch-button" onClick={handleSubmit}>
+            Hämta lediga<br></br>lokaler
+          </button>
+        </div>
       </div>
+      <div id="rooms"></div>
     </main>
-  )
-}
+  );
+};
 
-export default IndexPage
+export default IndexPage;
 
-export const Head: HeadFC = () => <title>Home Page</title>
+export const Head: HeadFC = () => <title>Home Page</title>;
