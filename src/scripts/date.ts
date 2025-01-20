@@ -61,14 +61,10 @@ export class DateTime extends Date {
   }
 
   beforeDateTime(other: DateTime, compareSeconds: boolean = false): boolean {
-    if (
-      this.sameDateTimeAs(other, compareSeconds) ||
-      this.afterDate(other) ||
-      this.afterTime(other, compareSeconds)
-    ) {
-      return false;
-    }
-    return true;
+    return (
+      !this.sameDateTimeAs(other, compareSeconds) &&
+      !this.afterDate(other)
+    ) 
   }
 
   afterDateTime(other: DateTime, compareSeconds: boolean = false): boolean {

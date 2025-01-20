@@ -4,9 +4,21 @@ export interface icalEvent {
   start: DateTime;
   end: DateTime;
   summary: string;
-  location: Array<string>;
+  location: Array<Room>;
   description: string;
+  courses: string[];
 }
+
+export interface roomEvent {
+  room: string;
+  duration: Duration;
+  course: string;
+}
+
+const rooms = ["SU00", "SU01", "SU02", "SU03", "SU04", "SU10", "SU11", "SU12", "SU13", "SU14", "SU15", "SU17", "SU24", "SU25", "Valhall"] as const;
+type Room = (typeof rooms)[number];
+
+const isRoom = (x: any): x is Room => rooms.includes(x);
 
 export function eventsAtDate(date: DateTime, icalEvents: icalEvent[]): icalEvent[] {
   const events = new Array<icalEvent>();
@@ -36,14 +48,14 @@ export function getRoomsBookedAt(events: icalEvent[]): Map<string, Set<Duration>
   return result;
 }
 
-export function getRoomsNotBookedAt(events: icalEvent[]): Map<string, Set<Duration>> {
-  const roomsBookedAt = getRoomsBookedAt(events)
-  let result = new Map<string, Set<Duration>>();
-  roomsBookedAt.forEach((room) => {
+// export function getRoomsNotBookedAt(events: icalEvent[]): Map<string, Set<Duration>> {
+//   const roomsBookedAt = getRoomsBookedAt(events)
+//   let result = new Map<string, Set<Duration>>();
+//   roomsBookedAt.forEach((room) => {
 
-  });
-  return result;
-}
+//   });
+//   return result;
+// }
 
 // function eventsAtTime(date: DateTime, icalEvents: icalEvent[]): icalEvent[] {
 //     const events = new Array<icalEvent>;
@@ -116,12 +128,21 @@ function stringToEvent(icalEventString: string): icalEvent | null {
   }
 
   let summ = "";
+  let courses = new Set<string>();
   if (summary !== null) {
     summ = summary[1];
     summ = summ.replaceAll("\\n", "\n");
+    summ = summ.replaceAll("\\", "");
+
+    summ.matchAll(
+      new RegExp("(T[A-Z]{3}[0-9]{2}|[0-9]{2}[A-Z0-9]{4})", "g")
+    ).toArray().forEach(val => val.forEach(entry => {
+        courses.add(entry)
+      }
+    ));
   }
 
-  let rooms = new Array<string>();
+  let rooms = new Set<Room>();
   if (locationMatch !== null) {
     let locString = locationMatch[1] + ";";
     locString = locString.replaceAll("\\n", ";");
@@ -132,7 +153,9 @@ function stringToEvent(icalEventString: string): icalEvent | null {
     let value = locStringMatch.next();
     while (!value.done) {
       let room = value.value[1];
-      rooms.push(room);
+      if (isRoom(room)) {
+        rooms.add(room);
+      }
       value = locStringMatch.next();
     }
   }
@@ -141,8 +164,9 @@ function stringToEvent(icalEventString: string): icalEvent | null {
     start: parseDate(start[1]),
     end: parseDate(end[1]),
     summary: summ,
-    location: rooms,
+    location: Array.from(rooms),
     description: desc,
+    courses: Array.from(courses),
   };
 }
 
@@ -167,7 +191,10 @@ export function icalToJSON(ical: string): Array<icalEvent> {
   return events;
 }
 
-export const URL =
+export const URL = 
+  // "https://cloud.timeedit.net/liu/web/schema/ri6mQXYl64ZZ0bQvyl0ZZZq5ylYc" +
+  // "15uQ087QQ99QyY7ol5Z8oQ5m50ZWajdyWRpnW95W6X9aZ5LQ0%C3%A4mSaLvn9c8ywX35U" +
+  // "WodhcQn0265.ics";
   "https://cloud.timeedit.net/liu/web/schema/ri679Q93Y09Z55Q5X0870609y6Z8509" +
   "XX480949Q5777978X6864XXX674426894995X6X273577113136669779XX92054515X36156" +
   "634439147X1456180457X47787011XX45X665X674371WX6X5159457X74491405Y5X3XX435" +
