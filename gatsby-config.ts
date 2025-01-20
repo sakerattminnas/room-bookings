@@ -11,4 +11,8 @@ const config: GatsbyConfig = {
   plugins: [],
 }
 
+module.exports = {
+  pathPrefix: "/room-bookings",
+}
+
 export default config
