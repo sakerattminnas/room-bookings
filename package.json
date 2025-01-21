@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "develop": "gatsby develop",
+    "deploy": "gatsby deploy",
     "start": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
@@ -19,8 +20,8 @@
   "dependencies": {
     "gatsby": "^5.14.1",
     "npm-check-updates": "^17.1.14",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@ava/typescript": "^5.0.0",
