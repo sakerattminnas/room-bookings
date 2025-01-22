@@ -19,209 +19,211 @@ import "../index.css";
 
 
 const IndexPage: React.FC<PageProps> = () => {
-  const [responseData, setResponseData] = React.useState("");
+  // const [responseData, setResponseData] = React.useState("");
   // const [startTime, setStartTime] = React.useState("");
   // const [endTime, setEndTime] = React.useState("");
   // let calendarInfo: icalEvent[] = new Array<icalEvent>();
 
-  // React.useEffect(() => {
-  //   fetch(URL).then((response) => {
-  //     let charsReceived = 0;
-  //     let result: string;
-  //     const reader = response.body ? response.body.getReader() : undefined;
-  //     reader?.read().then(function processResponseBody({ value, done }) {
-  //       if (done) {
-  //         console.log("Stream complete");
-  //         calendarInfo = eventsAtDate(new DateTime(today()), icalToJSON(result));
-  //         setResponseData(calendarInfo.toString());
-  //         return calendarInfo;
-  //       }
-  //       charsReceived += value.length;
-  //       result += new TextDecoder().decode(value);
+//   React.useEffect(() => {
+//   //   fetch(URL).then((response) => {
+//   //     let charsReceived = 0;
+//   //     let result: string;
+//   //     const reader = response.body ? response.body.getReader() : undefined;
+//   //     reader?.read().then(function processResponseBody({ value, done }) {
+//   //       if (done) {
+//   //         console.log("Stream complete");
+//   //         calendarInfo = eventsAtDate(new DateTime(today()), icalToJSON(result));
+//   //         setResponseData(calendarInfo.toString());
+//   //         return calendarInfo;
+//   //       }
+//   //       charsReceived += value.length;
+//   //       result += new TextDecoder().decode(value);
 
-  //       return reader.read().then(processResponseBody);
-  //     });
-  //   });
-  // }, []);
+//   //       return reader.read().then(processResponseBody);
+//   //     });
+//   //   });
 
-  async function getIcal(): Promise<string> {
-    return fetch(URL)
-    .then((response) => response.body)
-    .then((rb) => {
-    if (!rb) {
-      return
-    }
-    const reader = rb.getReader();
+//   // async function getIcal(): Promise<string> {
+//     fetch(URL)
+//     .then((response) => response.body)
+//     .then((rb) => {
+//     if (!rb) {
+//       return
+//     }
+//     const reader = rb.getReader();
 
-    return new ReadableStream({
-      start(controller) {
-        // The following function handles each data chunk
-        function push() {
-          // "done" is a Boolean and value a "Uint8Array"
-          reader.read().then(({ done, value }) => {
-            // If there is no more data to read
-            if (done) {
-              // console.log("done", done);
-              controller.close();
-              return;
-            }
-            // Get the data and send it to the browser via the controller
-            controller.enqueue(value);
-            // Check chunks by logging to the console
-            // console.log(done, value);
-            push();
-          });
-        }
+//     return new ReadableStream({
+//       start(controller) {
+//         // The following function handles each data chunk
+//         function push() {
+//           // "done" is a Boolean and value a "Uint8Array"
+//           reader.read().then(({ done, value }) => {
+//             // If there is no more data to read
+//             if (done) {
+//               // console.log("done", done);
+//               controller.close();
+//               return;
+//             }
+//             // Get the data and send it to the browser via the controller
+//             controller.enqueue(value);
+//             // Check chunks by logging to the console
+//             // console.log(done, value);
+//             push();
+//           });
+//         }
 
-        push();
-      },
-    });
-  })
-  .then((stream) =>
-    // Respond with our stream
-    new Response(stream, { headers: { "Content-Type": "text/html" } }).text(),
-  )
-  .then((result) => {
-    // Do things with result
-    return result;
-  });
-  }
+//         push();
+//       },
+//     });
+//   })
+//   .then((stream) =>
+//     // Respond with our stream
+//     new Response(stream, { headers: { "Content-Type": "text/html" } }).text(),
+//   )
+//   .then((result) => {
+//     // Do things with result
+//     setResponseData(result);
+//     // return result;
+//   });
+//   // }
+// }, []);
 
-  function getInputDate(): DateTime {
-    const dateInput = document.getElementById("date");
-    if (!dateInput || !(dateInput instanceof HTMLInputElement)) {
-      return new DateTime(today());
-    }
-    return new DateTime(dateInput.value);
-  }
+  // function getInputDate(): DateTime {
+  //   const dateInput = document.getElementById("date");
+  //   if (!dateInput || !(dateInput instanceof HTMLInputElement)) {
+  //     return new DateTime(today());
+  //   }
+  //   return new DateTime(dateInput.value);
+  // }
 
-  function handleRoomVisibility() {
-    const cbs = document.getElementById("checkboxes");
-    if (cbs) {
-      const checkboxes = Array.from(cbs.children).filter(elem => elem instanceof HTMLInputElement);
-      // console.log("checkboxes", checkboxes);
-      checkboxes.forEach(elem => {
-        const rooms = document.getElementsByClassName(elem.name);
-        if (elem.checked) {
-          // console.log("checkbox checked", elem.name);
-          Array.from(rooms).forEach(elem => {
-            if (elem.classList.contains("hidden")) {
-              elem.classList.remove("hidden");
-            }
-          });
-        } else {
-          // console.log("checkbox unchecked", elem.name);
-          Array.from(rooms).forEach(elem => {
-            elem.classList.add("hidden");
-          });
+  // function handleRoomVisibility() {
+  //   const cbs = document.getElementById("checkboxes");
+  //   if (cbs) {
+  //     const checkboxes = Array.from(cbs.children).filter(elem => elem instanceof HTMLInputElement);
+  //     // console.log("checkboxes", checkboxes);
+  //     checkboxes.forEach(elem => {
+  //       const rooms = document.getElementsByClassName(elem.name);
+  //       if (elem.checked) {
+  //         // console.log("checkbox checked", elem.name);
+  //         Array.from(rooms).forEach(elem => {
+  //           if (elem.classList.contains("hidden")) {
+  //             elem.classList.remove("hidden");
+  //           }
+  //         });
+  //       } else {
+  //         // console.log("checkbox unchecked", elem.name);
+  //         Array.from(rooms).forEach(elem => {
+  //           elem.classList.add("hidden");
+  //         });
           
-        }
-      })
-    }
-  }
+  //       }
+  //     })
+  //   }
+  // }
 
-  function getTimeSlotIndex(startHour: number, endHour: number): number[] {
-    let result = new Set<number>();
-    switch (startHour) {
-      case 8:
-      case 9:
-        result.add(8);
-        break;
+  // function getTimeSlotIndex(startHour: number, endHour: number): number[] {
+  //   let result = new Set<number>();
+  //   switch (startHour) {
+  //     case 8:
+  //     case 9:
+  //       result.add(8);
+  //       break;
         
-      case 10:
-      case 11:
-        result.add(10);
-        break;
+  //     case 10:
+  //     case 11:
+  //       result.add(10);
+  //       break;
       
-      case 13:
-      case 14:
-        result.add(13);
-        break;
+  //     case 13:
+  //     case 14:
+  //       result.add(13);
+  //       break;
       
-      case 15:
-      case 16:
-        result.add(15);
-        break;
+  //     case 15:
+  //     case 16:
+  //       result.add(15);
+  //       break;
       
-      case 17:
-      case 18:
-        result.add(17);
-        break;
+  //     case 17:
+  //     case 18:
+  //       result.add(17);
+  //       break;
       
-      case 19:
-      case 20:
-        result.add(19);
-        break;
+  //     case 19:
+  //     case 20:
+  //       result.add(19);
+  //       break;
     
-      default:
-        break;
-    }
-    switch (endHour) {
-      case 11:
-        result.add(10);
-        break;
+  //     default:
+  //       break;
+  //   }
+  //   switch (endHour) {
+  //     case 11:
+  //       result.add(10);
+  //       break;
       
-      case 14:
-        result.add(13);
-        break;
+  //     case 14:
+  //       result.add(13);
+  //       break;
       
-      case 16:
-        result.add(15);
-        break;
+  //     case 16:
+  //       result.add(15);
+  //       break;
       
-      case 18:
-        result.add(17);
-        break;
+  //     case 18:
+  //       result.add(17);
+  //       break;
       
-      case 20:
-        result.add(19);
-        break;
+  //     case 20:
+  //       result.add(19);
+  //       break;
 
-      default:
-        break;
-    }
-    return Array.from(result).map(val => {
-      if (val % 2) {
-        return (val - 1)/2 - 3;
-      } else {
-        return val/2 - 3;
-      }
-    });
-  }
+  //     default:
+  //       break;
+  //   }
+  //   return Array.from(result).map(val => {
+  //     if (val % 2) {
+  //       return (val - 1)/2 - 3;
+  //     } else {
+  //       return val/2 - 3;
+  //     }
+  //   });
+  // }
 
-  function pickCourseCode(courses: Array<string>): string {
-    const cs = courses.join("/");
-    const tekfak = cs.match(new RegExp("T[A-Z]{3}[0-9]{2}"));
-    if (tekfak) {
-      return tekfak[0];
-    }
-    return cs.split("/")[0];
-  }
+  // function pickCourseCode(courses: Array<string>): string {
+  //   const cs = courses.join("/");
+  //   const tekfak = cs.match(new RegExp("T[A-Z]{3}[0-9]{2}"));
+  //   if (tekfak) {
+  //     return tekfak[0];
+  //   }
+  //   return cs.split("/")[0];
+  // }
 
   function handleSubmit() {
-    handleRoomVisibility();
+    // handleRoomVisibility();
 
     const div = document.getElementById("rooms");
     const subdiv = document.getElementById("subdiv");
     if (div && subdiv) {
-      getIcal().then(s => {
-        let events = eventsAtDate(getInputDate(), icalToJSON(s));
-        events.forEach(event => {
-          const timeSlots = getTimeSlotIndex(event.start.getHours(), event.end.getHours());
-          event.location.forEach(loc => {
-            const cells = document.querySelector("." + loc)?.children;
-            if (cells) {
-              Array.from(cells).forEach((cell, index) => {
-                if (timeSlots.includes(index)) {
-                  cell.innerHTML = pickCourseCode(event.courses);
-                }
-              });
-            }
-        });
+      // console.log(responseData);
+      // getIcal().then(s => {
+      //   let events = eventsAtDate(getInputDate(), icalToJSON(s));
+      //   events.forEach(event => {
+      //     const timeSlots = getTimeSlotIndex(event.start.getHours(), event.end.getHours());
+      //     event.location.forEach(loc => {
+      //       const cells = document.querySelector("." + loc)?.children;
+      //       if (cells) {
+      //         Array.from(cells).forEach((cell, index) => {
+      //           if (timeSlots.includes(index)) {
+      //             cell.innerHTML = pickCourseCode(event.courses);
+      //           }
+      //         });
+      //       }
+      //   });
 
-        })
-        div.appendChild(subdiv);
-      });
+      //   })
+      //   div.appendChild(subdiv);
+      // });
     }
   }
 
@@ -230,7 +232,7 @@ const IndexPage: React.FC<PageProps> = () => {
       <p id="info"> </p>
       <div id="inputbox" className="input">
         <div className="input-item">
-          <input id="date" type="date" defaultValue={today()}></input>
+          <input id="date" type="date" defaultValue={""}></input>
         </div>
 
         {/* <div id="checkboxes">
@@ -241,7 +243,7 @@ const IndexPage: React.FC<PageProps> = () => {
         </div> */}
 
         <div className="input-item">
-          <button id="fetch-button" onClick={handleSubmit}>Hämta</button>
+          <button id="fetch-button" >Hämta</button>
         </div>
       </div>
 
