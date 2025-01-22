@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="index.css">
         <script type="text/javascript" src="index.js"></script>
     </head>
@@ -8,16 +9,15 @@
         <span class="hidden" id="loader"></span>
         <main>
             <div id="inputbox" class="input">
-                <div class="input-item">
+                <div>
                     <input id="date" type="date"></input>
                 </div>
-                <div class="input-item">
+                <div>
                     <button id="fetch-button" onclick="handleSubmit()">Hämta</button>
                 </div>
             </div>
       
             <div id="rooms">
-              <div id="subdiv"></div>
               <table id="timetable">
                 <tr>
                   <th>Sal</th>

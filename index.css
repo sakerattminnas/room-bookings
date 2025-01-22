@@ -1,3 +1,10 @@
+/* narrow */
+@media (max-width: 600px) {
+  button {
+    padding: 0.5rem;
+  }
+}
+
 body {
   font-family: "Noto Mono", monospace;
 }
@@ -31,27 +38,29 @@ table {
   margin: 2em auto 0 auto;
 }
 
+button {
+  background-color: aliceblue;
+}
+
+#rooms {
+  overflow: scroll;
+}
+
 td,
 th {
   border: 1px solid #dddddd;
   text-align: left;
-  padding: 8px;
   width: 4em;
+  padding: 0.2em;
+}
+
+td:first-child, tr:first-child {
+  font-weight: bold;
+  background-color: lightblue;
 }
 
 tr:nth-child(even) {
   background-color: #dddddd;
-}
-
-@media (max-width: 600px) {
-  label,
-  input,
-  select,
-  button,
-  .between-time,
-  .between-times {
-    font-size: x-large;
-  }
 }
 
 #loader:not(.hidden) {
@@ -59,7 +68,7 @@ tr:nth-child(even) {
   height: 48px;
   display: inline-block;
   position: fixed;
-  top: 30%;
+  top: 50%;
   left: 50%;
   margin-left: -24px;
   border: 3px solid;

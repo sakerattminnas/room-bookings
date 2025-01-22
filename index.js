@@ -253,15 +253,15 @@ function stringToEvent(icalEventString) {
     locString = locString.replaceAll("\\n", ";");
     locString = locString.replace(new RegExp("[\n \r]+", "g"), "");
 
-    let locStringMatch = locString.matchAll(new RegExp("Lokal:(.+?);", "gu"));
+    let locStringMatch = locString.matchAll(new RegExp("Lokal:([A-Za-zÅÄÖåäö0-9/]+)[\n;]", "gu"));
 
-    let value = locStringMatch.next();
-    while (!value.done) {
-      let room = value.value[1];
+    let nextMatch = locStringMatch.next();
+    while (!nextMatch.done) {
+      let room = nextMatch.value[1].split("/")[0];
       if (ROOMS.has(room)) {
         rooms.add(room);
       }
-      value = locStringMatch.next();
+      nextMatch = locStringMatch.next();
     }
   }
 
@@ -400,8 +400,6 @@ async function getIcal() {
     .then((result) => {
       // Do things with result
 
-      const div = document.getElementById("rooms");
-      const subdiv = document.getElementById("subdiv");
       const info = document.getElementById("info");
       const infodate = document.getElementById("infodate");
       const date = document.getElementById("date");
@@ -425,7 +423,6 @@ async function getIcal() {
           }
         });
       });
-      div.appendChild(subdiv);
       infodate.innerText = date.value;
       info.hidden = false;
     })
