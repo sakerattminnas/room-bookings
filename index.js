@@ -148,6 +148,9 @@ const ROOMS = new Set([
   "SU24",
   "SU25",
   "Valhall",
+  "Olympen",
+  "Egypten",
+  "Asgård",
 ]);
 
 function eventsAtDate(date, icalEvents) {
@@ -424,7 +427,7 @@ async function getIcal() {
         });
       });
       infodate.innerText = date.value;
-      info.hidden = false;
+      info.classList = "";
     })
     .catch((e) => console.log(e))
     .finally(() => setLoading(false));

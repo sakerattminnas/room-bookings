@@ -13,6 +13,10 @@ body {
   display: none;
 }
 
+.white {
+  color: white;
+}
+
 .input {
   display: grid;
   row-gap: 1em;
@@ -35,7 +39,7 @@ p {
 }
 
 table {
-  margin: 2em auto 0 auto;
+  margin: 0 auto 0 auto;
 }
 
 button {
@@ -60,7 +64,7 @@ td:first-child, tr:first-child {
 }
 
 tr:nth-child(even) {
-  background-color: #dddddd;
+  background-color: #ddd;
 }
 
 #loader:not(.hidden) {
