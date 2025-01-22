@@ -402,29 +402,32 @@ async function getIcal() {
 
       const div = document.getElementById("rooms");
       const subdiv = document.getElementById("subdiv");
-      if (div && subdiv) {
-        let events = eventsAtDate(getInputDate(), icalToJSON(result));
-        if (!events) {
-          return;
-        }
-        events.forEach((event) => {
-          const timeSlots = getTimeSlotIndex(
-            event.start.getHours(),
-            event.end.getHours()
-          );
-          event.location.forEach((loc) => {
-            const cells = document.querySelector("." + loc)?.children;
-            if (cells) {
-              Array.from(cells).forEach((cell, index) => {
-                if (timeSlots.includes(index)) {
-                  cell.innerHTML = pickCourseCode(event.courses);
-                }
-              });
-            }
-          });
-        });
-        div.appendChild(subdiv);
+      const info = document.getElementById("info");
+      const infodate = document.getElementById("infodate");
+      const date = document.getElementById("date");
+      let events = eventsAtDate(getInputDate(), icalToJSON(result));
+      if (!events) {
+        return;
       }
+      events.forEach((event) => {
+        const timeSlots = getTimeSlotIndex(
+          event.start.getHours(),
+          event.end.getHours()
+        );
+        event.location.forEach((loc) => {
+          const cells = document.querySelector("." + loc)?.children;
+          if (cells) {
+            Array.from(cells).forEach((cell, index) => {
+              if (timeSlots.includes(index)) {
+                cell.innerHTML = pickCourseCode(event.courses);
+              }
+            });
+          }
+        });
+      });
+      div.appendChild(subdiv);
+      infodate.innerText = date.value;
+      info.hidden = false;
     })
     .catch((e) => console.log(e))
     .finally(() => setLoading(false));
