@@ -1,6 +1,38 @@
 window.onload = () => {
+  addRooms();
   let dateInput = document.getElementById("date");
   dateInput.defaultValue = today();
+};
+
+const ROOMS = new Map([
+  ["b", ["SU00", "SU01", "SU02", "SU03", "SU04", "SU10", "SU11", "SU12",
+    "SU13", "SU14", "SU15", "SU17", "SU24", "SU25", "Olympen",
+    "Egypten", "Asgård"]]
+]);
+
+addRooms = function() {
+  let timeTable = document.getElementById("timetable")?.children[0];
+
+  ROOMS.forEach((rooms, key) => {
+    rooms.forEach((room) => {
+      let tr = document.createElement("tr");
+      let td = document.createElement("td");
+      tr.className = "row " + key + " " + room;
+      let specialName = room.match(/SU(15|17)/);
+      if (specialName) {
+        room = room + "/" + (parseInt(specialName[1]) + 1);
+      }
+      td.innerText = room;
+      tr.appendChild(td);
+
+      for (let i = 0; i < 6; i++) {
+        let td2 = document.createElement("td");
+        tr.appendChild(td2);
+      }
+
+      timeTable.appendChild(tr);
+    });
+  });
 };
 
 class DateTime extends Date {
