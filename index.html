@@ -1,38 +1,57 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Salsbokningar</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="index.css">
-        <script type="text/javascript" src="index.js"></script>
-    </head>
-    <body>
-        <span class="hidden" id="loader"></span>
-        <main>
-            <div id="inputbox" class="input">
-                <div>
-                    <input id="date" type="date"></input>
-                </div>
-                <div>
-                    <button id="fetch-button" onclick="handleSubmit()">Hämta</button>
-                </div>
-            </div>
-      
-            <p class="white" id="info">Visar salar bokade <span id="infodate"></span></p>
 
-            <div id="rooms">
-              <table id="timetable">
+<head>
+    <title>Salsbokningar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css">
+    <script type="text/javascript" src="constants.js"></script>
+    <script type="text/javascript" src="utils.js"></script>
+    <script type="text/javascript" src="datetime.js"></script>
+    <script type="text/javascript" src="ical.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+</head>
+
+<body>
+    <span class="hidden" id="loader"></span>
+    <main>
+        <div id="inputbox" class="input">
+            <div>
+                <input id="date" type="date"></input>
+            </div>
+            <button type="button" class="collapsible" onclick="toggleFilterVisibility()">
+                <span id="leftarrow">&#x02C3</span>
+                <span id="downarrow" class="hidden">&#x02C5</span> Filter
+            </button>
+            <form id="checkbox-form" class="collapsible-content hidden"></form>
+            <form id="regex-form" class="collapsible-content hidden">
+                <input name="regex" id="regex-input" type="text" 
+                    placeholder="RegEx som matchar sal">
+                <input type="button" id="regex-button" value="Rensa" 
+                    onclick="clearRegExp()">
+            </form>
+            <div>
+                <button id="fetch-button" onclick="handleSubmit()">Hämta</button>
+            </div>
+        </div>
+
+        <p class="white" id="info">Visar salar bokade 
+            <span id="infodate"></span><span id="inforegex"></span></p>
+
+        <div id="rooms">
+            <table id="timetable">
                 <tr>
-                  <th>Sal</th>
-                  <th id="8">08-10</th>
-                  <th id="10">10-12</th>
-                  <th id="13">13-15</th>
-                  <th id="15">15-17</th>
-                  <th id="17">17-19</th>
-                  <th id="19">19-21</th>
+                    <th>Sal</th>
+                    <th id="8">08-10</th>
+                    <th id="10">10-12</th>
+                    <th id="13">13-15</th>
+                    <th id="15">15-17</th>
+                    <th id="17">17-19</th>
+                    <th id="19">19-21</th>
                 </tr>
             </table>
-          </div>
-        </main>
-    </body>
+        </div>
+    </main>
+</body>
+
 </html>

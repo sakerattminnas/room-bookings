@@ -1,7 +1,14 @@
 /* narrow */
 @media (max-width: 600px) {
-  button {
-    padding: 0.5rem;
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 1.2em;
+  }
+
+  .collapsible-content > label {
+    padding-left: 1em;
+    padding-bottom: 2em;
   }
 }
 
@@ -17,6 +24,10 @@ body {
   color: white;
 }
 
+#info {
+  font-size: small;
+}
+
 .input {
   display: grid;
   row-gap: 1em;
@@ -28,11 +39,28 @@ body {
   justify-items: center;
 }
 
-#checkboxes {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  width: fit-content;
+.collapsible {
+  border: none;
+  background: none;
 }
+
+.collapsible-content {
+  margin-bottom: 1em;
+}
+
+#downarrow, #leftarrow {
+  color: #4d4d4d;
+  font-style: normal;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none;
+}
+
+/* #inputbox {
+  width: 15em;
+} */
 
 p {
   text-align: center;
@@ -44,6 +72,9 @@ table {
 
 button {
   background-color: aliceblue;
+  border: 0.1em solid rgb(144, 181, 193);
+  border-radius: 3px;
+  padding: 0.5em;
 }
 
 #rooms {
